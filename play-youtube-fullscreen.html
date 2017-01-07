@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link href="youtube.css" rel="stylesheet">
+    <title>Youtube Player - plays videos in a array like a playlist each for a specified duration in full screen</title>
+</head>
+<body>
+
+  <ol>
+    <li>Click on [Play in Fullscreen]</li>
+    <li>Click on the fullscreen button in youtube's player to exit fullscreen</li>
+  </ol>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <button>Play in Fullscreen</button><br>
+  <div id="player"></div>
+
+<script>
+    /**
+     * Put your video IDs in this array with start and end times, quality choice as well....
+     // Your videos in the order it needs to play will be in the below array, soon will be moved out to json file and then made as a restfull service..
+     // it need not be just mp4, but can be other video formats too...
+     */
+    var videoInfo = [
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 5, 'endSeconds': 20, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 50, 'endSeconds': 60, 'suggestedQuality': 'large'},
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 22, 'endSeconds': 30, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 5, 'endSeconds': 20, 'suggestedQuality': 'large'},
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 50, 'endSeconds': 60, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 50, 'endSeconds': 60, 'suggestedQuality': 'large'},
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 88, 'endSeconds': 99, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 100, 'endSeconds': 120, 'suggestedQuality': 'large'}
+    ];
+    var player, iframe;
+    var $ = document.querySelector.bind(document);
+
+
+    var currentVideoId = 0;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+        //   height: '100%',
+        //   width: '100%',
+
+          events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+
+      var player = event.target;
+  iframe = $('#player');
+  setupListener();
+}
+
+function setupListener (){
+$('button').addEventListener('click', playFullscreen);
+}
+
+function playFullscreen (){
+player.loadVideoById(videoInfo[currentVideoId]);
+
+  var requestFullScreen = iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
+  if (requestFullScreen) {
+    requestFullScreen.bind(iframe)();
+  }
+
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.ENDED && player.getVideoLoadedFraction() > 0) {
+            currentVideoId++;
+            if (currentVideoId < videoInfo.length) {
+                player.loadVideoById(videoInfo[currentVideoId]);
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

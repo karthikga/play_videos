@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<title>Plays local MP4 videos in a sequence for a specified duration.. </title>
+<head>
+<link href="video-js.min.css" rel="stylesheet">
+</head>
+<body>
+
+ <div class="videoContainer">
+  <video id="all_videos" controls autoplay>
+
+  </video>
+ </div>
+
+<script>
+var videoSource = new Array();
+
+// Put your video IDs in this array with start and end time
+// Your videos in the order it needs to play will be in the below array, soon will be moved out to json file and then made as a restfull service..
+// it need not be just mp4, but can be other video formats too...
+
+videoSource[0]='videos/sample_from_youtube-1.mp4#t=86,92';
+
+videoSource[1]='videos/sample_from_youtube-1.mp4#t=121,129';
+
+videoSource[2]='videos/sample_from_youtube-1.mp4#t=152,158';
+
+videoSource[3]='videos/sample_from_youtube-1.mp4#t=210,219';
+
+
+
+
+var videoCount = videoSource.length;
+var count=1;
+var player=document.getElementById('all_videos');
+
+
+document.getElementById("all_videos").setAttribute("src",videoSource[0]);
+
+
+function videoPlay(videoNum)
+      {
+  document.getElementById("all_videos").setAttribute("src",videoSource[videoNum]);
+  document.getElementById("all_videos").load();
+  document.getElementById("all_videos").play();
+//  console.log(document.getElementById("all_videos").getAttribute("src"));
+      }
+      // below function is not used..
+      function closeMe()
+
+      {
+
+      var win = window.open("","_self"); /* url = "" or "about:blank"; target="_self" */
+
+      win.close();
+
+      }
+
+// console.log("plays first video");
+
+player.addEventListener('pause',myHandler,false);
+
+// console.log(document.getElementById("all_videos").getAttribute("src"));
+
+function myHandler(e)
+      {
+       if (count == videoCount)
+         {
+           // window.top.close closes tabs alone and window itself if no tab is open in that window in chrome alone...
+          window.top.close();
+           // the below as well only works in chrome and not in firefox..
+           // var closeIt = window.open(""); setTimeout(function(){ closeIt.close(); },2000);
+          // closeMe();
+         }
+       if(!e)
+         {
+            e = window.event;
+         }
+          videoPlay(count);
+          count++;
+      }
+ </script>
+
+</body>
+</html>

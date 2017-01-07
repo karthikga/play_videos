@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Youtube Player - plays videos in a array like a playlist each for a specified duration</title>
+
+</head>
+<body>
+<div id="player"></div>
+<script src="https://www.youtube.com/iframe_api"> </script>
+<script>
+/**
+ * Put your video IDs in this array with start and end times, quality choice as well....
+ // Your videos in the order it needs to play will be in the below array, soon will be moved out to json file and then made as a restfull service..
+ // it need not be just mp4, but can be other video formats too...
+ */
+
+    var videoInfo = [
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 5, 'endSeconds': 20, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 50, 'endSeconds': 60, 'suggestedQuality': 'large'},
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 22, 'endSeconds': 30, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 5, 'endSeconds': 20, 'suggestedQuality': 'large'},
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 50, 'endSeconds': 60, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 50, 'endSeconds': 60, 'suggestedQuality': 'large'},
+      {'videoId': 'kGqiQuv19_c', 'startSeconds': 88, 'endSeconds': 99, 'suggestedQuality': 'large'},
+      {'videoId': 'Wm6CUkswsNw', 'startSeconds': 100, 'endSeconds': 120, 'suggestedQuality': 'large'}
+    ];
+    console.log(videoInfo.length);
+    var player;
+    var currentVideoId = 0;
+
+
+
+    function onPlayerReady(event)
+     {
+      //  console.log(currentVideoId);
+        event.target.loadVideoById(videoInfo[currentVideoId]);
+     }
+
+    function onPlayerStateChange(event)
+    {
+      if (event.data == YT.PlayerState.ENDED && player.getVideoLoadedFraction() > 0)
+       {
+        //  console.log(currentVideoId);
+          currentVideoId++;
+          //  console.log(currentVideoId);
+            if (currentVideoId < videoInfo.length)
+            {
+              //  console.log(currentVideoId);
+                player.loadVideoById(videoInfo[currentVideoId]);
+            }
+
+
+       }
+
+    }
+            function onYouTubeIframeAPIReady()
+             {
+                player = new YT.Player('player',
+                 {
+                  events:
+                   {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+             }
+</script>
+
+</body>
+</html>
